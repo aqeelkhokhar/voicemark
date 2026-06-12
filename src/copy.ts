@@ -44,6 +44,7 @@ export const copy = {
     errorBody:
       'Your transcript is safe. You can save it now and reflect later.',
     errorCta: 'Save without reflection',
+    parseError: 'Could not parse the AI response. Try again.',
   },
 
   history: {
@@ -71,11 +72,19 @@ export const copy = {
     aiProvider: {
       groupTitle: 'AI provider',
       keyFieldLabel: 'Gemini API key',
+      groqKeyFieldLabel: 'Groq API key (optional)',
       keyFieldPlaceholder: 'Paste your key here',
       keyHelpLink: 'Get a free key from Google AI Studio',
       keyTestButton: 'Test connection',
       keyTestSuccess: 'Connected',
       keyTestFailure: 'Could not connect. Check the key.',
+      saveKey: 'Save key',
+      removeKey: 'Remove key',
+      removeKeyConfirmTitle: 'Remove this key?',
+      removeKeyConfirmBody:
+        'Voicemark will no longer be able to reflect until you add a key again.',
+      missingKeyBanner:
+        'Reflection needs an API key. Paste your free Gemini key below.',
     },
     data: {
       groupTitle: 'Your data',
