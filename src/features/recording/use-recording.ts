@@ -23,8 +23,13 @@ export function useRecording({ onFinished }: UseRecordingArgs) {
   const [transcript, setTranscript] = useState('');
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
-  // Final segments committed by the recognizer; interim text is appended for display.
+  // finalizedRef holds segments the recognizer has marked final. displayRef
+  // mirrors what's on screen: finalized text plus the current interim segment.
+  // We hand displayRef (not just finalizedRef) to Review on stop, because
+  // Android often never finalizes the last segment before recognition ends —
+  // keeping only finalized text would discard short, still-interim speech.
   const finalizedRef = useRef('');
+  const displayRef = useRef('');
   const discardedRef = useRef(false);
   const finishedRef = useRef(false);
   const onFinishedRef = useRef(onFinished);
@@ -38,10 +43,13 @@ export function useRecording({ onFinished }: UseRecordingArgs) {
       finalizedRef.current = [finalizedRef.current, segment]
         .filter(Boolean)
         .join(' ');
-      setTranscript(finalizedRef.current);
+      displayRef.current = finalizedRef.current;
     } else {
-      setTranscript([finalizedRef.current, segment].filter(Boolean).join(' '));
+      displayRef.current = [finalizedRef.current, segment]
+        .filter(Boolean)
+        .join(' ');
     }
+    setTranscript(displayRef.current);
   });
 
   useSpeechRecognitionEvent('start', () => setStatus('recording'));
@@ -49,7 +57,7 @@ export function useRecording({ onFinished }: UseRecordingArgs) {
   useSpeechRecognitionEvent('end', () => {
     if (discardedRef.current || finishedRef.current) return;
     finishedRef.current = true;
-    onFinishedRef.current(finalizedRef.current.trim());
+    onFinishedRef.current(displayRef.current.trim());
   });
 
   useSpeechRecognitionEvent('error', (event) => {
