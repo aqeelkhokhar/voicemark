@@ -1,7 +1,8 @@
+import { useLocalSearchParams } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { copy } from '@/copy';
-import { mockEntry } from '@/features/journal/mock';
+import { journal } from '@/features/journal';
 import { Card } from '@/ui/components/card';
 import { MoodPill } from '@/ui/components/mood-pill';
 import { Screen } from '@/ui/components/screen';
@@ -17,41 +18,56 @@ function formatEntryDate(iso: string): string {
 }
 
 export default function EntryDetailScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const entry = journal.getById(id);
+
+  if (!entry) {
+    return (
+      <Screen>
+        <View style={styles.centerEmpty}>
+          <Text style={styles.body}>{copy.history.emptyTitle}</Text>
+        </View>
+      </Screen>
+    );
+  }
+
   return (
     <Screen scroll>
       <View style={styles.header}>
-        <Text style={styles.date}>{formatEntryDate(mockEntry.createdAt)}</Text>
-        <MoodPill mood={mockEntry.mood} />
+        <Text style={styles.date}>{formatEntryDate(entry.createdAt)}</Text>
+        {entry.mood && <MoodPill mood={entry.mood} />}
       </View>
 
+      {entry.summary && (
+        <View style={styles.section}>
+          <Text style={styles.heading}>{copy.reflection.summaryHeading}</Text>
+          <Card>
+            {entry.summary.map((bullet) => (
+              <Text key={bullet} style={styles.body}>
+                · {bullet}
+              </Text>
+            ))}
+          </Card>
+        </View>
+      )}
+
+      {entry.followUp && (
+        <View style={styles.section}>
+          <Text style={styles.heading}>{copy.reflection.followupHeading}</Text>
+          <Card>
+            <Text style={styles.followUp}>{entry.followUp}</Text>
+          </Card>
+        </View>
+      )}
+
+      {/* Phase 2: transcript expanded by default — no AI content exists yet.
+          The collapse toggle ships in Phase 4. */}
       <View style={styles.section}>
-        <Text style={styles.heading}>{copy.reflection.summaryHeading}</Text>
+        <Text style={styles.heading}>{copy.review.header}</Text>
         <Card>
-          {mockEntry.summary.map((bullet) => (
-            <Text key={bullet} style={styles.body}>
-              · {bullet}
-            </Text>
-          ))}
+          <Text style={styles.body}>{entry.editedTranscript}</Text>
         </Card>
       </View>
-
-      <View style={styles.section}>
-        <Text style={styles.heading}>{copy.reflection.followupHeading}</Text>
-        <Card>
-          <Text style={styles.followUp}>{mockEntry.followUp}</Text>
-        </Card>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.transcriptToggle}>
-          {copy.entryDetail.transcriptToggleExpanded}
-        </Text>
-        <Card>
-          <Text style={styles.body}>{mockEntry.transcript}</Text>
-        </Card>
-      </View>
-
-      <Text style={styles.deleteEntry}>{copy.entryDetail.deleteEntry}</Text>
     </Screen>
   );
 }
@@ -80,14 +96,9 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     fontStyle: 'italic',
   },
-  transcriptToggle: {
-    ...typography.caption,
-    color: colors.accent,
-  },
-  deleteEntry: {
-    ...typography.body,
-    color: colors.error,
-    textAlign: 'center',
-    paddingVertical: spacing.md,
+  centerEmpty: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

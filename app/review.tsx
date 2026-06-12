@@ -3,14 +3,25 @@ import { useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { copy } from '@/copy';
-import { mockEntry } from '@/features/journal/mock';
+import { journal } from '@/features/journal';
+import { takeDraftTranscript } from '@/features/recording/draft';
 import { AppButton } from '@/ui/components/app-button';
 import { Screen } from '@/ui/components/screen';
 import { colors, radii, spacing, typography } from '@/ui/theme';
 
 export default function ReviewScreen() {
   const router = useRouter();
-  const [transcript, setTranscript] = useState<string>(mockEntry.transcript);
+  // Lazy initializer so the one-shot draft is consumed exactly once per mount.
+  const [rawTranscript] = useState<string>(() => takeDraftTranscript() ?? '');
+  const [transcript, setTranscript] = useState<string>(rawTranscript);
+
+  const handleSaveWithoutReflection = () => {
+    journal.insert({
+      rawTranscript,
+      editedTranscript: transcript.trim(),
+    });
+    router.dismissTo('/');
+  };
 
   return (
     <Screen scroll>
@@ -30,7 +41,7 @@ export default function ReviewScreen() {
         <AppButton
           label={copy.review.saveWithoutReflectionButton}
           variant="secondary"
-          onPress={() => router.dismissTo('/')}
+          onPress={handleSaveWithoutReflection}
         />
       </View>
     </Screen>
