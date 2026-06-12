@@ -86,6 +86,13 @@ export const copy = {
       missingKeyBanner:
         'Reflection needs an API key. Paste your free Gemini key below.',
     },
+    coachingStyle: {
+      groupTitle: 'Coaching style',
+      defaultStyle: 'Reflective (default)',
+      stoic: 'Stoic',
+      gratitude: 'Gratitude',
+      comingSoon: 'Coming soon',
+    },
     data: {
       groupTitle: 'Your data',
       clearAllEntries: 'Clear all entries',

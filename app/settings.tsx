@@ -5,6 +5,8 @@ import {
   ActivityIndicator,
   Alert,
   Linking,
+  Modal,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -172,9 +174,39 @@ function KeyControls({
   );
 }
 
+function PrivacyModal({
+  visible,
+  onClose,
+}: {
+  visible: boolean;
+  onClose: () => void;
+}) {
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <View style={styles.modalBackdrop}>
+        <View style={styles.modalCard}>
+          <Text style={styles.modalTitle}>{copy.privacyModal.title}</Text>
+          {copy.privacyModal.bullets.map((bullet) => (
+            <Text key={bullet} style={styles.modalBullet}>
+              · {bullet}
+            </Text>
+          ))}
+          <AppButton label={copy.privacyModal.cta} onPress={onClose} />
+        </View>
+      </View>
+    </Modal>
+  );
+}
+
 export default function SettingsScreen() {
   const { missingKey } = useLocalSearchParams<{ missingKey?: string }>();
   const version = Constants.expoConfig?.version ?? '0.0.0';
+  const [privacyVisible, setPrivacyVisible] = useState(false);
 
   const handleClearEntries = () => {
     Alert.alert(
@@ -220,6 +252,38 @@ export default function SettingsScreen() {
       </View>
 
       <View style={styles.group}>
+        <Text style={styles.groupTitle}>
+          {copy.settings.coachingStyle.groupTitle}
+        </Text>
+        <Card>
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>
+              {copy.settings.coachingStyle.defaultStyle}
+            </Text>
+            <View style={styles.selectedDot} />
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.row}>
+            <Text style={styles.rowLabelDisabled}>
+              {copy.settings.coachingStyle.stoic}
+            </Text>
+            <Text style={styles.comingSoon}>
+              {copy.settings.coachingStyle.comingSoon}
+            </Text>
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.row}>
+            <Text style={styles.rowLabelDisabled}>
+              {copy.settings.coachingStyle.gratitude}
+            </Text>
+            <Text style={styles.comingSoon}>
+              {copy.settings.coachingStyle.comingSoon}
+            </Text>
+          </View>
+        </Card>
+      </View>
+
+      <View style={styles.group}>
         <Text style={styles.groupTitle}>{copy.settings.data.groupTitle}</Text>
         <Card>
           <AppButton
@@ -247,9 +311,16 @@ export default function SettingsScreen() {
             {copy.settings.about.githubRow}
           </Text>
           <View style={styles.divider} />
-          <Text style={styles.rowLink}>{copy.settings.about.privacyRow}</Text>
+          <Pressable onPress={() => setPrivacyVisible(true)}>
+            <Text style={styles.rowLink}>{copy.settings.about.privacyRow}</Text>
+          </Pressable>
         </Card>
       </View>
+
+      <PrivacyModal
+        visible={privacyVisible}
+        onClose={() => setPrivacyVisible(false)}
+      />
     </Screen>
   );
 }
@@ -344,5 +415,41 @@ const styles = StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: colors.borderSubtle,
+  },
+  rowLabelDisabled: {
+    ...typography.body,
+    color: colors.textSecondary,
+  },
+  comingSoon: {
+    ...typography.caption,
+    color: colors.textSecondary,
+  },
+  selectedDot: {
+    width: 12,
+    height: 12,
+    borderRadius: radii.pill,
+    backgroundColor: colors.accent,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(27, 27, 27, 0.4)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.xl,
+  },
+  modalCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radii.modal,
+    padding: spacing.xl,
+    gap: spacing.md,
+    width: '100%',
+  },
+  modalTitle: {
+    ...typography.sectionHeading,
+    color: colors.textPrimary,
+  },
+  modalBullet: {
+    ...typography.body,
+    color: colors.textPrimary,
   },
 });

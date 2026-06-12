@@ -1,8 +1,10 @@
-import { useLocalSearchParams } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 
 import { copy } from '@/copy';
 import { journal } from '@/features/journal';
+import { AppButton } from '@/ui/components/app-button';
 import { Card } from '@/ui/components/card';
 import { MoodPill } from '@/ui/components/mood-pill';
 import { Screen } from '@/ui/components/screen';
@@ -18,8 +20,14 @@ function formatEntryDate(iso: string): string {
 }
 
 export default function EntryDetailScreen() {
+  const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const entry = journal.getById(id);
+  const [entry] = useState(() => journal.getById(id));
+  // Collapsed by default when AI content exists; the transcript is the only
+  // content on reflection-less entries, so those start expanded.
+  const [transcriptVisible, setTranscriptVisible] = useState(
+    () => !entry?.summary,
+  );
 
   if (!entry) {
     return (
@@ -30,6 +38,20 @@ export default function EntryDetailScreen() {
       </Screen>
     );
   }
+
+  const handleDelete = () => {
+    Alert.alert(copy.entryDetail.deleteEntry, copy.history.deleteConfirm, [
+      { text: copy.firstLaunchTooltip.dismiss, style: 'cancel' },
+      {
+        text: copy.entryDetail.deleteEntry,
+        style: 'destructive',
+        onPress: () => {
+          journal.deleteById(entry.id);
+          router.back();
+        },
+      },
+    ]);
+  };
 
   return (
     <Screen scroll>
@@ -54,20 +76,33 @@ export default function EntryDetailScreen() {
       {entry.followUp && (
         <View style={styles.section}>
           <Text style={styles.heading}>{copy.reflection.followupHeading}</Text>
-          <Card>
+          <View style={styles.quote}>
             <Text style={styles.followUp}>{entry.followUp}</Text>
-          </Card>
+          </View>
         </View>
       )}
 
-      {/* Phase 2: transcript expanded by default — no AI content exists yet.
-          The collapse toggle ships in Phase 4. */}
       <View style={styles.section}>
-        <Text style={styles.heading}>{copy.review.header}</Text>
-        <Card>
-          <Text style={styles.body}>{entry.editedTranscript}</Text>
-        </Card>
+        <Text
+          style={styles.transcriptToggle}
+          onPress={() => setTranscriptVisible((visible) => !visible)}
+        >
+          {transcriptVisible
+            ? copy.entryDetail.transcriptToggleExpanded
+            : copy.entryDetail.transcriptToggleCollapsed}
+        </Text>
+        {transcriptVisible && (
+          <Card>
+            <Text style={styles.body}>{entry.editedTranscript}</Text>
+          </Card>
+        )}
       </View>
+
+      <AppButton
+        label={copy.entryDetail.deleteEntry}
+        variant="destructive"
+        onPress={handleDelete}
+      />
     </Screen>
   );
 }
@@ -91,10 +126,20 @@ const styles = StyleSheet.create({
     ...typography.body,
     color: colors.textPrimary,
   },
+  quote: {
+    borderLeftWidth: 2,
+    borderLeftColor: colors.accent,
+    paddingLeft: spacing.lg,
+    paddingVertical: spacing.sm,
+  },
   followUp: {
     ...typography.body,
     color: colors.textPrimary,
     fontStyle: 'italic',
+  },
+  transcriptToggle: {
+    ...typography.caption,
+    color: colors.accent,
   },
   centerEmpty: {
     flex: 1,

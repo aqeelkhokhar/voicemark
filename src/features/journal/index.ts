@@ -2,6 +2,7 @@ import * as Crypto from 'expo-crypto';
 
 import {
   deleteAllEntries,
+  deleteEntryById,
   getEntryById,
   insertEntry,
   JournalEntryRow,
@@ -65,6 +66,10 @@ export const journal = {
   getById(id: string): JournalEntry | null {
     const row = getEntryById(id);
     return row ? fromRow(row) : null;
+  },
+
+  deleteById(id: string): void {
+    deleteEntryById(id);
   },
 
   deleteAll(): void {

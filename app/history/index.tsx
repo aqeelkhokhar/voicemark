@@ -9,11 +9,17 @@ import { MoodPill } from '@/ui/components/mood-pill';
 import { Screen } from '@/ui/components/screen';
 import { colors, radii, spacing, typography } from '@/ui/theme';
 
-function entryTime(createdAt: string): string {
-  return new Date(createdAt).toLocaleTimeString('en-US', {
+function entryDateTime(createdAt: string): string {
+  const date = new Date(createdAt);
+  const day = date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+  });
+  const time = date.toLocaleTimeString('en-US', {
     hour: 'numeric',
     minute: '2-digit',
   });
+  return `${day} · ${time}`;
 }
 
 export default function HistoryScreen() {
@@ -56,7 +62,9 @@ export default function HistoryScreen() {
               style={({ pressed }) => [styles.row, pressed && styles.pressed]}
             >
               <View style={styles.rowHeader}>
-                <Text style={styles.rowTime}>{entryTime(item.createdAt)}</Text>
+                <Text style={styles.rowTime}>
+                  {entryDateTime(item.createdAt)}
+                </Text>
                 {item.mood && <MoodPill mood={item.mood} />}
               </View>
               <Text numberOfLines={2} style={styles.rowBody}>
