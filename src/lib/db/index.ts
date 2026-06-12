@@ -35,7 +35,26 @@ function migrate(database: SQLiteDatabase) {
       coaching_style TEXT NOT NULL DEFAULT 'reflective'
     );
     CREATE INDEX IF NOT EXISTS idx_entries_created_at ON entries (created_at DESC);
+    CREATE TABLE IF NOT EXISTS settings (
+      key TEXT PRIMARY KEY NOT NULL,
+      value TEXT NOT NULL
+    );
   `);
+}
+
+export function getSetting(key: string): string | null {
+  const row = getDb().getFirstSync<{ value: string }>(
+    'SELECT value FROM settings WHERE key = ?',
+    [key],
+  );
+  return row?.value ?? null;
+}
+
+export function setSetting(key: string, value: string): void {
+  getDb().runSync(
+    'INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value',
+    [key, value],
+  );
 }
 
 export function insertEntry(row: JournalEntryRow): void {
@@ -68,6 +87,10 @@ export function getEntryById(id: string): JournalEntryRow | null {
       [id],
     ) ?? null
   );
+}
+
+export function deleteEntryById(id: string): void {
+  getDb().runSync('DELETE FROM entries WHERE id = ?', [id]);
 }
 
 export function deleteAllEntries(): void {

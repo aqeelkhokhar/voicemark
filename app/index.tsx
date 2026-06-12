@@ -4,6 +4,10 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { copy } from '@/copy';
 import { JournalEntry, journal } from '@/features/journal';
+import {
+  dismissFirstLaunchTooltip,
+  isFirstLaunchTooltipDismissed,
+} from '@/features/journal/app-settings';
 import { relativeDate } from '@/features/journal/date-groups';
 import { MoodPill } from '@/ui/components/mood-pill';
 import { Screen } from '@/ui/components/screen';
@@ -20,12 +24,20 @@ function formatToday(): string {
 export default function TodayScreen() {
   const router = useRouter();
   const [latestEntry, setLatestEntry] = useState<JournalEntry | null>(null);
+  const [showTooltip, setShowTooltip] = useState(
+    () => !isFirstLaunchTooltipDismissed(),
+  );
 
   useFocusEffect(
     useCallback(() => {
       setLatestEntry(journal.listByDate()[0] ?? null);
     }, []),
   );
+
+  const handleDismissTooltip = () => {
+    dismissFirstLaunchTooltip();
+    setShowTooltip(false);
+  };
 
   return (
     <Screen contentStyle={styles.content}>
@@ -43,6 +55,15 @@ export default function TodayScreen() {
           </Link>
         </View>
       </View>
+
+      {showTooltip && (
+        <View style={styles.tooltip}>
+          <Text style={styles.tooltipText}>{copy.firstLaunchTooltip.text}</Text>
+          <Text style={styles.tooltipDismiss} onPress={handleDismissTooltip}>
+            {copy.firstLaunchTooltip.dismiss}
+          </Text>
+        </View>
+      )}
 
       <View style={styles.center}>
         <Pressable
@@ -140,6 +161,24 @@ const styles = StyleSheet.create({
   emptyHint: {
     ...typography.caption,
     color: colors.textSecondary,
+  },
+  tooltip: {
+    backgroundColor: colors.moodPillBackground,
+    borderWidth: 1,
+    borderColor: colors.accent,
+    borderRadius: radii.card,
+    padding: spacing.lg,
+    marginTop: spacing.lg,
+    gap: spacing.sm,
+  },
+  tooltipText: {
+    ...typography.body,
+    color: colors.textPrimary,
+  },
+  tooltipDismiss: {
+    ...typography.caption,
+    color: colors.accent,
+    alignSelf: 'flex-end',
   },
   preview: {
     backgroundColor: colors.surface,
