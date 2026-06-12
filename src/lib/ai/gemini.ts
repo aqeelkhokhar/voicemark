@@ -33,6 +33,10 @@ async function callGemini(
         generationConfig: {
           responseMimeType: 'application/json',
           maxOutputTokens,
+          // gemini-3.x flash defaults to a thinking budget that would
+          // consume the whole token cap before any answer is written.
+          // Reflection is a structured task that needs no reasoning budget.
+          thinkingConfig: { thinkingBudget: 0 },
         },
       }),
       signal,
@@ -61,7 +65,7 @@ export const gemini: AiProvider = {
   id: 'gemini',
 
   complete(prompt, apiKey, signal) {
-    return callGemini(prompt, apiKey, signal, 1024);
+    return callGemini(prompt, apiKey, signal, 2048);
   },
 
   async testConnection(apiKey, signal) {
@@ -76,7 +80,10 @@ export const gemini: AiProvider = {
           },
           body: JSON.stringify({
             contents: [{ parts: [{ text: 'ping' }] }],
-            generationConfig: { maxOutputTokens: 1 },
+            generationConfig: {
+              maxOutputTokens: 1,
+              thinkingConfig: { thinkingBudget: 0 },
+            },
           }),
           signal,
         });
