@@ -41,7 +41,7 @@ export default function EntryDetailScreen() {
 
   const handleDelete = () => {
     Alert.alert(copy.entryDetail.deleteEntry, copy.history.deleteConfirm, [
-      { text: copy.firstLaunchTooltip.dismiss, style: 'cancel' },
+      { text: copy.common.cancel, style: 'cancel' },
       {
         text: copy.entryDetail.deleteEntry,
         style: 'destructive',

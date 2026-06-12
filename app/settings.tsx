@@ -80,7 +80,7 @@ function KeyControls({
       copy.settings.aiProvider.removeKeyConfirmTitle,
       copy.settings.aiProvider.removeKeyConfirmBody,
       [
-        { text: copy.firstLaunchTooltip.dismiss, style: 'cancel' },
+        { text: copy.common.cancel, style: 'cancel' },
         {
           text: copy.settings.aiProvider.removeKey,
           style: 'destructive',
@@ -213,7 +213,7 @@ export default function SettingsScreen() {
       copy.settings.data.clearConfirmTitle,
       copy.settings.data.clearConfirmBody,
       [
-        { text: copy.firstLaunchTooltip.dismiss, style: 'cancel' },
+        { text: copy.common.cancel, style: 'cancel' },
         {
           text: copy.settings.data.clearConfirmDestructiveCta,
           style: 'destructive',

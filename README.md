@@ -56,7 +56,7 @@ Expo · React Native · TypeScript · expo-sqlite · expo-secure-store · expo-s
 
 ## Roadmap
 
-MVP is in progress (Phase 1 of 6). The post-MVP backlog — weekly digests, mood trends, audio playback, export, more coaching styles — lives in the project spec.
+The MVP loop — record, transcribe on-device, reflect, save, read back — is feature-complete. The post-MVP backlog includes weekly digests, mood trend charts, audio playback, Markdown/PDF export, additional coaching styles (Stoic, gratitude), and store distribution.
 
 ## License
 

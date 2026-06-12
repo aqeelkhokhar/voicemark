@@ -3,14 +3,14 @@
     "name": "Voicemark",
     "slug": "voicemark",
     "scheme": "voicemark",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "orientation": "portrait",
     "primaryColor": "#6B5B95",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "android": {
       "package": "com.aqeelahmad.voicemark",
-      "versionCode": 4,
+      "versionCode": 5,
       "permissions": ["RECORD_AUDIO"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon-foreground.png",

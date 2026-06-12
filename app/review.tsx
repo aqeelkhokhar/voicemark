@@ -27,7 +27,10 @@ export default function ReviewScreen() {
   const [reflecting, setReflecting] = useState(false);
   const [error, setError] = useState<ReflectError>(null);
 
+  const isEmpty = transcript.trim().length === 0;
+
   const handleSaveWithoutReflection = () => {
+    if (isEmpty) return;
     journal.insert({
       rawTranscript,
       editedTranscript: transcript.trim(),
@@ -36,6 +39,7 @@ export default function ReviewScreen() {
   };
 
   const handleReflect = async () => {
+    if (isEmpty) return;
     setError(null);
     setReflecting(true);
     const outcome = await reflect(transcript.trim());
@@ -94,9 +98,13 @@ export default function ReviewScreen() {
         </View>
       ) : (
         <View style={styles.actions}>
+          {isEmpty && (
+            <Text style={styles.emptyHint}>{copy.review.emptyHint}</Text>
+          )}
           <AppButton
             label={copy.review.reflectButton}
             onPress={handleReflect}
+            disabled={isEmpty}
           />
           <AppButton
             label={
@@ -106,6 +114,7 @@ export default function ReviewScreen() {
             }
             variant="secondary"
             onPress={handleSaveWithoutReflection}
+            disabled={isEmpty}
           />
         </View>
       )}
@@ -117,6 +126,11 @@ const styles = StyleSheet.create({
   editHint: {
     ...typography.caption,
     color: colors.textSecondary,
+  },
+  emptyHint: {
+    ...typography.caption,
+    color: colors.textSecondary,
+    textAlign: 'center',
   },
   input: {
     ...typography.body,
