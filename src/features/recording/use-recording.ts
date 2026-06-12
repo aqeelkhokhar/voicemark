@@ -22,6 +22,7 @@ export function useRecording({ onFinished }: UseRecordingArgs) {
   const [status, setStatus] = useState<RecordingStatus>('starting');
   const [transcript, setTranscript] = useState('');
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [errorDetail, setErrorDetail] = useState<string | null>(null);
 
   // finalizedRef holds segments the recognizer has marked final. displayRef
   // mirrors what's on screen: finalized text plus the current interim segment.
@@ -32,6 +33,9 @@ export function useRecording({ onFinished }: UseRecordingArgs) {
   const displayRef = useRef('');
   const discardedRef = useRef(false);
   const finishedRef = useRef(false);
+  // Set when the recognizer reports a real failure, so the end event that
+  // follows shows the error instead of silently navigating to an empty Review.
+  const erroredRef = useRef(false);
   const onFinishedRef = useRef(onFinished);
   useEffect(() => {
     onFinishedRef.current = onFinished;
@@ -56,20 +60,33 @@ export function useRecording({ onFinished }: UseRecordingArgs) {
 
   useSpeechRecognitionEvent('end', () => {
     if (discardedRef.current || finishedRef.current) return;
+    // If we captured words, keep them even when an error also fired.
+    if (displayRef.current.trim().length > 0) {
+      finishedRef.current = true;
+      onFinishedRef.current(displayRef.current.trim());
+      return;
+    }
+    // Nothing captured. If a real error occurred, surface it instead of
+    // navigating to an empty Review with no explanation.
+    if (erroredRef.current) {
+      setStatus('error');
+      return;
+    }
     finishedRef.current = true;
-    onFinishedRef.current(displayRef.current.trim());
+    onFinishedRef.current('');
   });
 
   useSpeechRecognitionEvent('error', (event) => {
     if (event.error === 'aborted') return;
-    if (event.error === 'not-allowed') {
+    if (
+      event.error === 'not-allowed' ||
+      event.error === 'service-not-allowed'
+    ) {
       setStatus('denied');
       return;
     }
-    // 'no-speech' and friends still emit 'end', which finalizes whatever we have.
-    if (event.error !== 'no-speech' && event.error !== 'speech-timeout') {
-      setStatus('error');
-    }
+    erroredRef.current = true;
+    setErrorDetail(`${event.error}: ${event.message}`);
   });
 
   useEffect(() => {
@@ -85,11 +102,34 @@ export function useRecording({ onFinished }: UseRecordingArgs) {
         setStatus('denied');
         return;
       }
-      ExpoSpeechRecognitionModule.start({
-        lang: 'en-US',
-        interimResults: true,
-        continuous: true,
-      });
+
+      // No recognition service on the device → fail loudly, not silently.
+      if (!ExpoSpeechRecognitionModule.isRecognitionAvailable()) {
+        erroredRef.current = true;
+        setErrorDetail(
+          'No speech recognition service is available on this device.',
+        );
+        setStatus('error');
+        return;
+      }
+
+      try {
+        ExpoSpeechRecognitionModule.start({
+          lang: 'en-US',
+          interimResults: true,
+          continuous: true,
+          // Prefer Google's network recognizer when on-device models are
+          // missing; this is what works out of the box on most Android phones.
+          requiresOnDeviceRecognition: false,
+        });
+      } catch (e) {
+        if (cancelled) return;
+        erroredRef.current = true;
+        setErrorDetail(
+          `start failed: ${e instanceof Error ? e.message : String(e)}`,
+        );
+        setStatus('error');
+      }
     })();
 
     return () => {
@@ -125,7 +165,7 @@ export function useRecording({ onFinished }: UseRecordingArgs) {
     return () => clearInterval(interval);
   }, [status, stop]);
 
-  return { status, transcript, elapsedSeconds, stop, discard };
+  return { status, transcript, elapsedSeconds, errorDetail, stop, discard };
 }
 
 export function formatTimer(totalSeconds: number): string {

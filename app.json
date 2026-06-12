@@ -32,7 +32,10 @@
         "expo-speech-recognition",
         {
           "microphonePermission": "Voicemark needs the microphone to record your voice notes. Audio is processed on-device and never uploaded.",
-          "speechRecognitionPermission": "Voicemark transcribes your voice notes on-device using speech recognition."
+          "speechRecognitionPermission": "Voicemark transcribes your voice notes on-device using speech recognition.",
+          "androidSpeechServicePackages": [
+            "com.google.android.googlequicksearchbox"
+          ]
         }
       ],
       "expo-sqlite",

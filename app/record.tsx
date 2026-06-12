@@ -11,17 +11,39 @@ import { colors, spacing, typography } from '@/ui/theme';
 export default function RecordScreen() {
   const router = useRouter();
 
-  const { status, transcript, elapsedSeconds, stop, discard } = useRecording({
-    onFinished: (finalTranscript) => {
-      setDraftTranscript(finalTranscript);
-      router.replace('/review');
-    },
-  });
+  const { status, transcript, elapsedSeconds, errorDetail, stop, discard } =
+    useRecording({
+      onFinished: (finalTranscript) => {
+        setDraftTranscript(finalTranscript);
+        router.replace('/review');
+      },
+    });
 
   const handleDiscard = () => {
     discard();
     router.dismissTo('/');
   };
+
+  if (status === 'error') {
+    return (
+      <Screen>
+        <View style={styles.center}>
+          <Text style={styles.deniedTitle}>Speech recognition failed</Text>
+          <Text style={styles.deniedBody}>
+            Voicemark couldn&apos;t transcribe on this device.
+          </Text>
+          {errorDetail && <Text style={styles.errorDetail}>{errorDetail}</Text>}
+        </View>
+        <View style={styles.actions}>
+          <AppButton
+            label={copy.record.discardButton}
+            variant="secondary"
+            onPress={handleDiscard}
+          />
+        </View>
+      </Screen>
+    );
+  }
 
   if (status === 'denied') {
     return (
@@ -117,6 +139,11 @@ const styles = StyleSheet.create({
   deniedBody: {
     ...typography.body,
     color: colors.textSecondary,
+    textAlign: 'center',
+  },
+  errorDetail: {
+    ...typography.caption,
+    color: colors.error,
     textAlign: 'center',
   },
 });
