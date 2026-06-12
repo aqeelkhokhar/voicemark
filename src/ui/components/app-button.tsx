@@ -8,20 +8,24 @@ type AppButtonProps = {
   label: string;
   onPress?: () => void;
   variant?: Variant;
+  disabled?: boolean;
 };
 
 export function AppButton({
   label,
   onPress,
   variant = 'primary',
+  disabled = false,
 }: AppButtonProps) {
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       style={({ pressed }) => [
         styles.base,
         styles[variant],
         pressed && styles.pressed,
+        disabled && styles.disabled,
       ]}
     >
       <Text
@@ -57,6 +61,9 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.85,
+  },
+  disabled: {
+    opacity: 0.4,
   },
   label: {
     ...typography.body,

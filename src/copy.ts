@@ -9,6 +9,10 @@ export const copy = {
     tagline: 'Speak. Reflect. Remember.',
   },
 
+  common: {
+    cancel: 'Cancel',
+  },
+
   today: {
     title: 'Voicemark',
     emptyHint: 'Tap to start your first reflection.',
@@ -32,6 +36,7 @@ export const copy = {
     editHint: 'Edit anything you want. Reflection is optional.',
     reflectButton: 'Reflect on this',
     saveWithoutReflectionButton: 'Save without reflection',
+    emptyHint: 'Nothing was transcribed. Record again to save an entry.',
   },
 
   reflection: {
