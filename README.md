@@ -1,56 +1,71 @@
-# Welcome to your Expo app 👋
+# Voicemark
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**Speak. Reflect. Remember.**
 
-## Get started
+<!-- Hero image: Reflection screen screenshot (Phase 5) -->
 
-1. Install dependencies
+<!-- 60-second demo video (Phase 5) -->
 
-   ```bash
-   npm install
-   ```
+Voicemark is a private voice journaling app. You speak a short reflection, the app transcribes it on-device, and a free-tier LLM returns a calm three-bullet summary, one follow-up question worth sitting with, and a mood tag. Everything is stored locally on your phone — no account, no backend, no analytics.
 
-2. Start the app
+## Features
 
-   ```bash
-   npx expo start
-   ```
+- Voice journaling — hold or tap to record up to five minutes
+- On-device transcription (native speech recognition, never uploaded)
+- AI reflection: three-bullet summary in your own voice
+- One open-ended follow-up question per entry
+- Mood tag from a fixed ten-word vocabulary
+- Fully local storage (SQLite on device)
+- Bring your own API key — your key, your quota, stored in secure storage
 
-In the output, you'll find options to open the app in a
+## Screenshots
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+<!-- Three side-by-side screenshots (Phase 5) -->
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Privacy commitments
 
-## Get a fresh project
+- Your voice never leaves your phone. Speech-to-text runs on-device.
+- Your transcript leaves your phone only when you tap Reflect, and only to the AI provider you connect (Google Gemini or Groq).
+- Voicemark stores no analytics. There is no backend. There is no account.
+- On the Gemini free tier, Google may use your transcript to improve their models. Use a paid Gemini account if this is unacceptable for your use case.
 
-When you're ready, run:
+## How to use
+
+1. Install the APK from the latest [Release](../../releases) <!-- APK attached from v0.5.0 (Phase 5) -->
+2. Paste your Gemini API key in Settings
+3. Hold to record
+
+## Get a free Gemini API key
+
+Go to [Google AI Studio](https://aistudio.google.com/apikey) and sign in with a Google account.
+Create an API key, copy it, and paste it into Voicemark's Settings → AI provider.
+
+## Run it locally
 
 ```bash
-npm run reset-project
+# Requires Node 20 and pnpm
+pnpm install
+pnpm dev
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Then open Expo Go on your device and scan the QR code.
 
-### Other setup steps
+## Tech stack
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+Expo · React Native · TypeScript · expo-sqlite · expo-secure-store · expo-speech-recognition · Google Gemini API
 
-## Learn more
+## Roadmap
 
-To learn more about developing your project with Expo, look at the following resources:
+MVP is in progress (Phase 1 of 6). The post-MVP backlog — weekly digests, mood trends, audio playback, export, more coaching styles — lives in the project spec.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## License
 
-## Join the community
+[MIT](LICENSE)
 
-Join our community of developers creating universal apps.
+## Author
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+**Aqeel Ahmad** — Senior Mobile Engineer
+
+- GitHub: [@aqeelkhokhar](https://github.com/aqeelkhokhar)
+- LinkedIn: <!-- link (Phase 5) -->
+- Build write-up on Medium: <!-- link (Phase 5) -->
