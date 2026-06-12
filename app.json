@@ -3,14 +3,14 @@
     "name": "Voicemark",
     "slug": "voicemark",
     "scheme": "voicemark",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "orientation": "portrait",
     "primaryColor": "#6B5B95",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "android": {
       "package": "com.aqeelahmad.voicemark",
-      "versionCode": 2,
+      "versionCode": 3,
       "permissions": ["RECORD_AUDIO"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon-foreground.png",
@@ -35,7 +35,8 @@
           "speechRecognitionPermission": "Voicemark transcribes your voice notes on-device using speech recognition."
         }
       ],
-      "expo-sqlite"
+      "expo-sqlite",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,
