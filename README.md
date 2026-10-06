@@ -6,12 +6,12 @@
 
 <!-- 60-second demo video (Phase 5) -->
 
-Voicemark is a private voice journaling app. You speak a short reflection, the app transcribes it on-device, and a free-tier LLM returns a calm three-bullet summary, one follow-up question worth sitting with, and a mood tag. Everything is stored locally on your phone — no account, no backend, no analytics.
+Voicemark is a private voice journaling app. You speak a short reflection, the app transcribes it with your phone's built-in speech recognition, and a free-tier LLM returns a calm three-bullet summary, one follow-up question worth sitting with, and a mood tag. Everything is stored locally on your phone — no account, no backend, no analytics.
 
 ## Features
 
 - Voice journaling — hold or tap to record up to five minutes
-- On-device transcription (native speech recognition, never uploaded)
+- Native speech recognition (the phone's built-in recognizer; on-device when the phone has an offline model)
 - AI reflection: three-bullet summary in your own voice
 - One open-ended follow-up question per entry
 - Mood tag from a fixed ten-word vocabulary
@@ -24,7 +24,7 @@ Voicemark is a private voice journaling app. You speak a short reflection, the a
 
 ## Privacy commitments
 
-- Your voice never leaves your phone. Speech-to-text runs on-device.
+- Voicemark never uploads or stores your audio itself. Speech-to-text uses the phone's built-in recognizer: it runs on-device when an offline speech model is installed; otherwise the platform's speech service (Google on Android, Apple on iOS) may process the audio.
 - Your transcript leaves your phone only when you tap Reflect, and only to the AI provider you connect (Google Gemini or Groq).
 - Voicemark stores no analytics. There is no backend. There is no account.
 - On the Gemini free tier, Google may use your transcript to improve their models. Use a paid Gemini account if this is unacceptable for your use case.
@@ -56,7 +56,7 @@ Expo · React Native · TypeScript · expo-sqlite · expo-secure-store · expo-s
 
 ## Roadmap
 
-The MVP loop — record, transcribe on-device, reflect, save, read back — is feature-complete. The post-MVP backlog includes weekly digests, mood trend charts, audio playback, Markdown/PDF export, additional coaching styles (Stoic, gratitude), and store distribution.
+The MVP loop — record, transcribe, reflect, save, read back — is feature-complete. The post-MVP backlog includes weekly digests, mood trend charts, audio playback, Markdown/PDF export, additional coaching styles (Stoic, gratitude), and store distribution.
 
 ## License
 
