@@ -1,3 +1,4 @@
+import { claude } from '@/lib/ai/claude';
 import { gemini } from '@/lib/ai/gemini';
 import { groq } from '@/lib/ai/groq';
 import { buildPrompt } from '@/lib/ai/prompt';
@@ -46,10 +47,15 @@ async function completeOnce(
  * and response validation. Only ever called from an explicit user tap.
  */
 export async function reflect(transcript: string): Promise<ReflectOutcome> {
-  const geminiKey = await getApiKey('gemini');
-  const groqKey = geminiKey ? null : await getApiKey('groq');
-  const provider = geminiKey ? gemini : groqKey ? groq : null;
-  const apiKey = geminiKey ?? groqKey;
+  // Claude is the primary provider, Gemini and Groq are optional fallbacks.
+  const candidates = [
+    { provider: claude, key: await getApiKey('claude') },
+    { provider: gemini, key: await getApiKey('gemini') },
+    { provider: groq, key: await getApiKey('groq') },
+  ];
+  const active = candidates.find((candidate) => candidate.key);
+  const provider = active?.provider ?? null;
+  const apiKey = active?.key ?? null;
 
   if (!provider || !apiKey) {
     return { status: 'no-key' };

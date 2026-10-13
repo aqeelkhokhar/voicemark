@@ -16,6 +16,7 @@ import {
 import { copy } from '@/copy';
 import { journal } from '@/features/journal';
 import { testProviderKey } from '@/features/reflection';
+import { claude } from '@/lib/ai/claude';
 import { gemini } from '@/lib/ai/gemini';
 import { groq } from '@/lib/ai/groq';
 import { AiProvider } from '@/lib/ai/provider';
@@ -32,20 +33,24 @@ import { Screen } from '@/ui/components/screen';
 import { colors, radii, spacing, typography } from '@/ui/theme';
 
 const GITHUB_URL = 'https://github.com/aqeelkhokhar/voicemark';
-const AI_STUDIO_URL = 'https://aistudio.google.com/apikey';
+const KEY_HELP_URLS: Record<ProviderId, string> = {
+  claude: 'https://console.anthropic.com/settings/keys',
+  gemini: 'https://aistudio.google.com/apikey',
+  groq: 'https://console.groq.com/keys',
+};
 
-const PROVIDERS: Record<ProviderId, AiProvider> = { gemini, groq };
+const PROVIDERS: Record<ProviderId, AiProvider> = { claude, gemini, groq };
 
 type TestState = 'idle' | 'testing' | 'success' | 'failure';
 
 function KeyControls({
   provider,
   label,
-  showHelpLink,
+  helpText,
 }: {
   provider: ProviderId;
   label: string;
-  showHelpLink?: boolean;
+  helpText?: string;
 }) {
   const [savedMask, setSavedMask] = useState<string | null>(null);
   const [input, setInput] = useState('');
@@ -132,12 +137,12 @@ function KeyControls({
         />
       )}
 
-      {showHelpLink && !savedMask && (
+      {helpText && !savedMask && (
         <Text
           style={styles.helpLink}
-          onPress={() => Linking.openURL(AI_STUDIO_URL)}
+          onPress={() => Linking.openURL(KEY_HELP_URLS[provider])}
         >
-          {copy.settings.aiProvider.keyHelpLink}
+          {helpText}
         </Text>
       )}
 
@@ -239,9 +244,14 @@ export default function SettingsScreen() {
         </Text>
         <Card>
           <KeyControls
-            provider="gemini"
+            provider="claude"
             label={copy.settings.aiProvider.keyFieldLabel}
-            showHelpLink
+            helpText={copy.settings.aiProvider.keyHelpLink}
+          />
+          <View style={styles.divider} />
+          <KeyControls
+            provider="gemini"
+            label={copy.settings.aiProvider.geminiKeyFieldLabel}
           />
           <View style={styles.divider} />
           <KeyControls

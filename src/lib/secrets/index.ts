@@ -6,9 +6,10 @@ import * as SecureStore from 'expo-secure-store';
  * never put them in navigable app state.
  */
 
-export type ProviderId = 'gemini' | 'groq';
+export type ProviderId = 'claude' | 'gemini' | 'groq';
 
 const STORE_KEYS: Record<ProviderId, string> = {
+  claude: 'claude_key',
   gemini: 'gemini_key',
   groq: 'groq_key',
 };

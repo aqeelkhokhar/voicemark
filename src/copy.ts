@@ -76,10 +76,11 @@ export const copy = {
     title: 'Settings',
     aiProvider: {
       groupTitle: 'AI provider',
-      keyFieldLabel: 'Gemini API key',
+      keyFieldLabel: 'Claude API key',
+      geminiKeyFieldLabel: 'Gemini API key (optional)',
       groqKeyFieldLabel: 'Groq API key (optional)',
       keyFieldPlaceholder: 'Paste your key here',
-      keyHelpLink: 'Get a free key from Google AI Studio',
+      keyHelpLink: 'Get a key from the Anthropic Console',
       keyTestButton: 'Test connection',
       keyTestSuccess: 'Connected',
       keyTestFailure: 'Could not connect. Check the key.',
@@ -89,7 +90,7 @@ export const copy = {
       removeKeyConfirmBody:
         'Voicemark will no longer be able to reflect until you add a key again.',
       missingKeyBanner:
-        'Reflection needs an API key. Paste your free Gemini key below.',
+        'Reflection needs an API key. Paste your Claude API key below.',
     },
     coachingStyle: {
       groupTitle: 'Coaching style',
@@ -118,9 +119,9 @@ export const copy = {
     title: 'Privacy in plain language',
     bullets: [
       'Your voice never leaves your phone. Speech-to-text runs on-device.',
-      'Your transcript leaves your phone only when you tap Reflect, and only to the AI provider you connect (Google Gemini or Groq).',
+      'Your transcript leaves your phone only when you tap Reflect, and only to the AI provider you connect (Anthropic Claude, Google Gemini or Groq).',
       'Voicemark stores no analytics. There is no backend. There is no account.',
-      'On the Gemini free tier, Google may use your transcript to improve their models. Use a paid Gemini account if this is unacceptable for your use case.',
+      'Anthropic does not use API inputs to train its models by default. On the Gemini free tier, Google may use your transcript to improve their models, so use a paid Gemini account if that is unacceptable for your use case.',
     ],
     cta: 'Got it',
   },
