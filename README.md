@@ -11,10 +11,14 @@
 Voicemark is a private voice journaling app. You speak a short reflection, the app transcribes it with your phone's built-in speech recognition, and Claude returns a calm three bullet summary, one follow up question worth sitting with, and a mood tag. Everything is stored on your phone. There is no account, no backend and no analytics.
 
 <p align="center">
-  <img src="docs/screenshots/home.png" width="260" alt="Voicemark home screen with a single tap to record button" />
-  &nbsp;&nbsp;
-  <img src="docs/screenshots/settings.png" width="260" alt="Settings screen with the Claude API key field, Gemini and Groq as optional alternatives" />
+  <img src="docs/screenshots/home.png" width="180" alt="Home screen with a single tap to record button" />
+  <img src="docs/screenshots/review.png" width="180" alt="Review screen where the transcript can be edited before reflecting" />
+  <img src="docs/screenshots/reflection.png" width="180" alt="Reflection screen with three bullets, a follow up question and a mood tag" />
+  <img src="docs/screenshots/history.png" width="180" alt="History list of saved entries with mood tags" />
+  <img src="docs/screenshots/settings.png" width="180" alt="Settings with the Claude API key field, Gemini and Groq optional" />
 </p>
+
+<p align="center"><sub>Home, review, reflection, history and settings. The screens use a short sample entry typed into the review screen, and the reflection shown is Claude's answer to that sample.</sub></p>
 
 ## Download
 
