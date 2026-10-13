@@ -20,7 +20,13 @@ Voicemark is a private voice journaling app. You speak a short reflection, the a
 
 ## Screenshots
 
-<!-- Three side-by-side screenshots (Phase 5) -->
+<p align="center">
+  <img src="docs/screenshots/home.png" width="260" alt="Voicemark home screen with a single tap to record button" />
+  &nbsp;&nbsp;
+  <img src="docs/screenshots/settings.png" width="260" alt="Settings screen with the Claude API key field, Gemini and Groq as optional alternatives" />
+</p>
+
+Left, the home screen. Right, Settings, where you add your own Claude API key.
 
 ## Privacy commitments
 
